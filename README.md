@@ -45,6 +45,7 @@ src/
   app/App.jsx
   features/tasks/components/TaskForm.jsx
   features/tasks/components/TaskList.jsx
+  features/tasks/components/TaskItem.jsx
   shared/ui/AppHeader.jsx
   styles/app.css
   styles/globals.css
@@ -61,6 +62,8 @@ public/
 
 `handleToggleTask` maps over the previous task array and replaces only the matching task with a copy whose `completed` value is inverted. IDs, titles and other tasks remain unchanged. Each task has a native toggle button with `aria-pressed`, a task-specific action label and visible keyboard focus. Completed tasks show a confirmation icon and a struck-through, muted title. Activate the button again to reopen the task.
 
+`TaskItem` owns its inline editing state: the draft title, validation error and whether the editor is open. The Pencil button opens a labelled input with the current title. Save or Enter trims and validates the draft before calling `onUpdateTask`; Cancel or Escape discards it. Losing focus does not save. Focus moves into the editor and returns to the edit button when it closes. `App` updates only the matching title, preserves the ID and completion state, and returns the previous array when the title is unchanged.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
@@ -71,16 +74,17 @@ public/
 - Task creation with title validation and accessible feedback
 - Dynamic task list with support for long titles
 - Task completion and reopening with mouse and keyboard support
+- Inline task editing with Save, Cancel, Enter, Escape and accessible validation
 - Keyboard submission and input focus management
 - Lucide React icons with a visibly labelled add button
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks are stored only in React state and are lost on reload. Editing, deletion, filters, persistence, statistics and a light theme are not implemented.
+Tasks are stored only in React state and are lost on reload. Deletion, filters, persistence, statistics and a light theme are not implemented.
 
 ## Roadmap
 
-1. Editing and deletion
+1. Task deletion
 2. Filters and search
 3. Local storage persistence and invalid-data handling
 4. Statistics and progress

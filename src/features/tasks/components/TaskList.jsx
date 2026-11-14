@@ -1,6 +1,7 @@
-import { Check, Circle, CircleCheck } from 'lucide-react';
+import { Check } from 'lucide-react';
+import TaskItem from './TaskItem.jsx';
 
-function TaskList({ tasks, onToggleTask }) {
+function TaskList({ tasks, onToggleTask, onUpdateTask }) {
   if (tasks.length === 0) {
     return (
       <div className="empty-state">
@@ -17,22 +18,12 @@ function TaskList({ tasks, onToggleTask }) {
   return (
     <ul className="task-list" aria-label="Tasks">
       {tasks.map((task) => (
-        <li className={`task-card${task.completed ? ' task-card--completed' : ''}`} key={task.id}>
-          <button
-            className="task-card__toggle"
-            type="button"
-            aria-pressed={task.completed}
-            aria-label={`Mark "${task.title}" as ${task.completed ? 'pending' : 'completed'}`}
-            onClick={() => onToggleTask(task.id)}
-          >
-            {task.completed ? (
-              <CircleCheck size={22} aria-hidden="true" />
-            ) : (
-              <Circle size={22} aria-hidden="true" />
-            )}
-          </button>
-          <span className="task-card__title">{task.title}</span>
-        </li>
+        <TaskItem
+          key={task.id}
+          task={task}
+          onToggleTask={onToggleTask}
+          onUpdateTask={onUpdateTask}
+        />
       ))}
     </ul>
   );

@@ -20,6 +20,17 @@ function App() {
     );
   }
 
+  function handleUpdateTask(taskId, newTitle) {
+    setTasks((previousTasks) => {
+      const taskToUpdate = previousTasks.find((task) => task.id === taskId);
+      if (!taskToUpdate || taskToUpdate.title === newTitle) return previousTasks;
+
+      return previousTasks.map((task) =>
+        task.id === taskId ? { ...task, title: newTitle } : task,
+      );
+    });
+  }
+
   return (
     <main className="app-shell">
       <AppHeader />
@@ -29,7 +40,7 @@ function App() {
           <span className="tasks-panel__caption">A little clarity, every day.</span>
         </div>
         <TaskForm onAddTask={handleAddTask} />
-        <TaskList tasks={tasks} onToggleTask={handleToggleTask} />
+        <TaskList tasks={tasks} onToggleTask={handleToggleTask} onUpdateTask={handleUpdateTask} />
       </section>
       <footer className="app-footer">One task at a time.</footer>
     </main>
