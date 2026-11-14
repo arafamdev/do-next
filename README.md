@@ -47,6 +47,7 @@ src/
   features/tasks/components/TaskList.jsx
   features/tasks/components/TaskItem.jsx
   features/tasks/components/TaskFilters.jsx
+  features/tasks/components/TaskStatistics.jsx
   features/tasks/utils/taskStorage.js
   shared/ui/AppHeader.jsx
   styles/app.css
@@ -84,6 +85,12 @@ Write errors do not interrupt the in-memory application. A discrete status messa
 
 Storage belongs to the browser profile and origin (including protocol, hostname and port); it does not synchronize across devices. Clearing browser data, private browsing, browser restrictions or quota limits can remove or prevent persistence. This is local convenience storage, not a backup. Concurrent tabs are not synchronized and the latest write wins.
 
+## Statistics and progress
+
+`App` derives total, active and completed counts directly from the full `tasks` array. Completed tasks have `completed === true`; active is the remaining count because task validation guarantees a boolean completion state. Overall progress is `Math.round((completed / total) * 100)`, or `0` when the array is empty. No additional counter state, storage access or calculation effect is used.
+
+`TaskStatistics` is a presentation component receiving these four values as props. A definition list pairs each count with its label and a labelled native `progress` element communicates the percentage. Counts update after creation, completion, reopening, deletion and storage recovery. Editing titles, filters and search do not affect the global statistics. Values are not live-announced on every update, avoiding excessive reader announcements.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
@@ -98,19 +105,19 @@ Storage belongs to the browser profile and origin (including protocol, hostname 
 - Task deletion with inline confirmation, keyboard cancellation and focus management
 - Combined All / Active / Completed filters and controlled title search
 - Automatic local task persistence with validation and write-failure feedback
+- Global task counts and accessible overall completion progress
 - Contextual no-results state with a reset action
 - Keyboard submission and input focus management
 - Lucide React icons with a visibly labelled add button
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks remain available after reload and new sessions while local storage is available. Statistics and a light theme are not implemented.
+Tasks remain available after reload and new sessions while local storage is available. A light theme is not implemented.
 
 ## Roadmap
 
-1. Statistics and progress
-2. Light theme and saved preference
-3. Accessibility review, interaction polish, tests and deployment
+1. Light theme and saved preference
+2. Accessibility review, interaction polish, tests and deployment
 
 ## Maintenance
 

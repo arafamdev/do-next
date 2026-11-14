@@ -29,6 +29,87 @@
   margin: var(--space-2) 0 0;
   color: var(--color-muted);
 }
+.task-statistics {
+  margin-bottom: var(--space-3);
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+}
+.task-statistics__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.task-statistics__heading h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+.task-statistics__heading p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+.task-statistics__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.task-statistics__metrics > div {
+  min-width: 0;
+}
+.task-statistics__metrics dt {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.task-statistics__metrics dd {
+  margin: 0.25rem 0 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.task-statistics__progress-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+.task-statistics__progress-heading span {
+  color: var(--color-accent);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.task-statistics__progress {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: 0.5rem;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 1rem;
+  background: var(--color-border);
+  color: var(--color-accent);
+  accent-color: var(--color-accent);
+}
+.task-statistics__progress::-webkit-progress-bar {
+  border-radius: 1rem;
+  background: var(--color-border);
+}
+.task-statistics__progress::-webkit-progress-value {
+  border-radius: 1rem;
+  background: var(--color-accent);
+}
+.task-statistics__progress::-moz-progress-bar {
+  border-radius: 1rem;
+  background: var(--color-accent);
+}
+
 .tasks-panel {
   padding: clamp(1.25rem, 4vw, 2rem);
   border: 1px solid var(--color-border);

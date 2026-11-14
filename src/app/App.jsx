@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import TaskForm from '../features/tasks/components/TaskForm.jsx';
 import TaskFilters from '../features/tasks/components/TaskFilters.jsx';
+import TaskStatistics from '../features/tasks/components/TaskStatistics.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
 import { loadTasks, saveTasks } from '../features/tasks/utils/taskStorage.js';
 import AppHeader from '../shared/ui/AppHeader.jsx';
@@ -44,6 +45,10 @@ function App() {
   }
 
   const visibleTasks = tasks.filter(matchesCriteria);
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed === true).length;
+  const activeTasks = totalTasks - completedTasks;
+  const progress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   function handleResetFilters() {
     searchInputRef.current?.focus();
@@ -82,6 +87,12 @@ function App() {
   return (
     <main className="app-shell">
       <AppHeader />
+      <TaskStatistics
+        total={totalTasks}
+        active={activeTasks}
+        completed={completedTasks}
+        progress={progress}
+      />
       <section className="tasks-panel" aria-labelledby="tasks-heading">
         <div className="tasks-panel__heading">
           <h2 id="tasks-heading">Your tasks</h2>
