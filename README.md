@@ -50,6 +50,7 @@ src/
   features/tasks/components/TaskStatistics.jsx
   features/tasks/utils/taskStorage.js
   shared/ui/AppHeader.jsx
+  shared/ui/AppFooter.jsx
   shared/hooks/useTheme.js
   styles/app.css
   styles/globals.css
@@ -99,6 +100,14 @@ Dark and light themes share semantic CSS tokens and use `data-theme` on the root
 `useTheme` owns the React selection and initializes from the root attributes applied by that script, avoiding a second storage read and keeping the first render consistent. System changes are followed until a manual choice exists. The header receives the theme and toggle callback; its labelled Sun/Moon button works with mouse and keyboard. Only manual choices write to `donext.theme.v1`. A failed write retains the session choice and never writes to `donext.tasks.v1`. A manual choice overrides subsequent system changes, even when saving fails. Theme preferences do not synchronize between tabs.
 
 The initial script applies the theme before the interface appears to reduce incorrect-theme flashes; later changes are applied in a layout effect before paint. No theme animation or third system option is added.
+
+## Interface and scrolling
+
+The layout uses compact metric cards, consistent controls and semantic theme tokens. Decorative dividers are separate from control borders, keeping inputs understated and keyboard focus visible. Both themes use the same responsive layout.
+
+The semantic task list has a maximum height and internal vertical scrolling: it grows naturally for short lists, then stays bounded for long lists. Creation, filters and statistics remain outside that scroll area. Mobile uses a viewport-relative height with a comfortable minimum; the document keeps its natural scroll for zoom, small screens and the virtual keyboard. Focus padding leaves room for outlines, and native focus scrolling keeps controls reachable without changing task focus handlers.
+
+`AppFooter` displays Arafam Mussa Silla, a GitHub link, the current copyright year and a non-interactive LinkedIn “Coming soon” label. Replace that label with a real link in the component when a URL is available; no placeholder URL is used.
 
 ## Implemented
 

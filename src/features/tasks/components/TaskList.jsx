@@ -72,7 +72,7 @@ function TaskList({
   }
 
   return (
-    <ul ref={listRef} className="task-list" aria-label="Tasks">
+    <ul ref={listRef} className="task-list task-list-scroll" aria-label="Tasks">
       {tasks.map((task) => (
         <TaskItem
           key={task.id}

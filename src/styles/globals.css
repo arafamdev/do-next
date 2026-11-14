@@ -11,7 +11,8 @@
   color-scheme: dark;
   --color-bg: #0b1214;
   --color-surface: #121d20;
-  --color-border: #2b3d40;
+  --color-border: #586f6a;
+  --color-divider: #293a3b;
   --color-text: #edf5f2;
   --color-muted: #a2b6b2;
   --color-accent: #69deb0;
@@ -22,7 +23,7 @@
   --color-danger-soft: #3a2028;
   --color-error: #ffb4b4;
   --color-accent-soft: #1c3b33;
-  --shadow-panel: 0 24px 64px rgb(0 0 0 / 18%);
+  --shadow-panel: 0 12px 36px rgb(0 0 0 / 12%);
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.5rem;
@@ -36,6 +37,7 @@
   --color-bg: #f1f5f2;
   --color-surface: #fafcfb;
   --color-border: #7a9085;
+  --color-divider: #d5dfd9;
   --color-text: #172e25;
   --color-muted: #4a6358;
   --color-accent: #047857;
@@ -46,7 +48,7 @@
   --color-danger-soft: #fce8ec;
   --color-error: #a1263c;
   --color-accent-soft: #dcefe5;
-  --shadow-panel: 0 24px 64px rgb(23 46 37 / 6%);
+  --shadow-panel: 0 12px 36px rgb(23 46 37 / 5%);
 }
 
 * {
@@ -65,7 +67,7 @@ input {
 button,
 input,
 a {
-  outline-offset: 4px;
+  outline-offset: 2px;
 }
 :focus-visible {
   outline: 2px solid var(--color-accent);

@@ -5,6 +5,7 @@ import TaskStatistics from '../features/tasks/components/TaskStatistics.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
 import { loadTasks, saveTasks } from '../features/tasks/utils/taskStorage.js';
 import useTheme from '../shared/hooks/useTheme.js';
+import AppFooter from '../shared/ui/AppFooter.jsx';
 import AppHeader from '../shared/ui/AppHeader.jsx';
 import '../styles/app.css';
 
@@ -124,7 +125,7 @@ function App() {
           taskInputRef={taskInputRef}
         />
       </section>
-      <footer className="app-footer">One task at a time.</footer>
+      <AppFooter />
     </main>
   );
 }
