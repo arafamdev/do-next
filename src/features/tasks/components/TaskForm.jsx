@@ -20,7 +20,7 @@ function TaskForm({ onAddTask }) {
     if (!trimmedTitle) {
       setError('Enter a task title before adding it.');
       setStatus('');
-      inputRef.current.focus();
+      inputRef.current?.focus();
       return;
     }
 
@@ -28,7 +28,7 @@ function TaskForm({ onAddTask }) {
     setTitle('');
     setError('');
     setStatus('Task added.');
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   return (

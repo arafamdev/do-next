@@ -11,6 +11,7 @@ Build an accessible, responsive application progressively, using small component
 - React with JavaScript and JSX
 - Vite
 - Vanilla CSS
+- Lucide React SVG icons
 - ESLint and Prettier
 
 ## Requirements
@@ -42,6 +43,8 @@ Open the local URL printed by Vite.
 ```text
 src/
   app/App.jsx
+  features/tasks/components/TaskForm.jsx
+  features/tasks/components/TaskList.jsx
   shared/ui/AppHeader.jsx
   styles/app.css
   styles/globals.css
@@ -50,7 +53,11 @@ public/
   favicon.svg
 ```
 
-`main.jsx` mounts React and loads global styles. `App` composes the page and its empty task area. `AppHeader` presents the application identity. Global styles define the dark palette, spacing tokens and focus treatment; application styles define the layout and its components.
+`main.jsx` mounts React and loads global styles. `App` owns the task array and passes an `onAddTask` callback to `TaskForm` and the tasks to `TaskList`. `AppHeader` presents the application identity. Global styles define the palette, spacing tokens and focus treatment; application styles group the layout, form, empty state and task cards.
+
+`TaskForm` uses a controlled input, trims the title and rejects empty or whitespace-only submissions. Errors are associated with the input and announced through a live region. After creation, the field clears, focus returns to it and a status message announces success. Tasks can be submitted with Enter or the add button.
+
+`App` creates each task as `{ id, title, completed }`, using `crypto.randomUUID()` and an immutable state update. `TaskList` renders semantic list items with stable IDs as keys, or the original empty state when there are no tasks.
 
 ## Implemented
 
@@ -59,22 +66,26 @@ public/
 - Fluid layout with wrapping content
 - Dark palette with emerald accents
 - CSS variables for future theme support
+- Task creation with title validation and accessible feedback
+- Dynamic task list with support for long titles
+- Keyboard submission and input focus management
+- Lucide React icons with a visibly labelled add button
+- Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Task creation and management are not implemented yet. The initial page has no interactive controls.
+Tasks are stored only in React state and are lost on reload. Completion, editing, deletion, filters, persistence, statistics and a light theme are not implemented.
 
 ## Roadmap
 
-1. Task creation and title validation
-2. Completion, editing and deletion
-3. Filters and search
-4. Local storage persistence and invalid-data handling
-5. Statistics and progress
-6. Light theme and saved preference
-7. Accessibility review, interaction polish, tests and deployment
+1. Completion, editing and deletion
+2. Filters and search
+3. Local storage persistence and invalid-data handling
+4. Statistics and progress
+5. Light theme and saved preference
+6. Accessibility review, interaction polish, tests and deployment
 
 ## Maintenance
 
 Keep components focused and state close to the feature that uses it. Add feature folders only when implementation needs them. Use a branch per feature and conventional commit messages. Run lint, formatting checks and the production build before integrating changes.
 
-Adjust the variables in `src/styles/globals.css` to change the visual identity. Validate contrast whenever palette values change. The initial layout uses fluid sizing and wrapping instead of fixed viewport widths. No animations are included.
+Adjust the variables in `src/styles/globals.css` to change the visual identity. Validate contrast whenever palette values change. The layout uses fluid sizing and wrapping. The form stacks its controls at widths up to 540px. Button hover uses a short color transition, disabled when reduced motion is requested.
