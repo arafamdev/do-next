@@ -109,6 +109,12 @@ The semantic task list has a maximum height and internal vertical scrolling: it 
 
 `AppFooter` displays Arafam Mussa Silla, a GitHub link, the current copyright year and a non-interactive LinkedIn “Coming soon” label. Replace that label with a real link in the component when a URL is available; no placeholder URL is used.
 
+## Bulk task actions
+
+Complete all and Reopen all apply to the full task array, including tasks hidden by filters or search. Each action changes only `completed`, preserving IDs, titles and order. The functional state update returns the existing array when nothing needs to change, and reuses unchanged task objects. Filters and search remain selected; visible results, global statistics and automatic persistence follow the existing state flow.
+
+Buttons are disabled when no task needs that action. Focus moves to the stable, labelled action group before the invoked button becomes disabled or filtered cards disappear. This group is programmatically focusable without adding an extra stop to normal Tab navigation. Individual task focus handlers remain unchanged.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
@@ -120,6 +126,7 @@ The semantic task list has a maximum height and internal vertical scrolling: it 
 - Task creation with title validation and accessible feedback
 - Dynamic task list with support for long titles
 - Task completion and reopening with mouse and keyboard support
+- Complete all and Reopen all actions across every task
 - Inline task editing with Save, Cancel, Enter, Escape and accessible validation
 - Task deletion with inline confirmation, keyboard cancellation and focus management
 - Combined All / Active / Completed filters and controlled title search

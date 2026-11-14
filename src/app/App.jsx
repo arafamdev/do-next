@@ -36,6 +36,7 @@ function App() {
     setStorageUnavailable(!saveTasks(tasks));
   }, [tasks, canPersist]);
   const taskInputRef = useRef(null);
+  const bulkActionsRef = useRef(null);
   const searchInputRef = useRef(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,6 +84,24 @@ function App() {
     });
   }
 
+  function handleCompleteAll() {
+    bulkActionsRef.current?.focus();
+    setTasks((previousTasks) =>
+      previousTasks.every((task) => task.completed)
+        ? previousTasks
+        : previousTasks.map((task) => (task.completed ? task : { ...task, completed: true })),
+    );
+  }
+
+  function handleReopenAll() {
+    bulkActionsRef.current?.focus();
+    setTasks((previousTasks) =>
+      previousTasks.every((task) => !task.completed)
+        ? previousTasks
+        : previousTasks.map((task) => (task.completed ? { ...task, completed: false } : task)),
+    );
+  }
+
   function handleDeleteTask(taskId) {
     setTasks((previousTasks) => previousTasks.filter((task) => task.id !== taskId));
   }
@@ -99,7 +118,25 @@ function App() {
       <section className="tasks-panel" aria-labelledby="tasks-heading">
         <div className="tasks-panel__heading">
           <h2 id="tasks-heading">Your tasks</h2>
-          <span className="tasks-panel__caption">A little clarity, every day.</span>
+          <div
+            className="bulk-actions"
+            ref={bulkActionsRef}
+            role="group"
+            aria-label="Actions for all tasks"
+            aria-describedby="bulk-actions-description"
+            tabIndex={-1}
+          >
+            <span className="bulk-actions__label">All tasks</span>
+            <span className="visually-hidden" id="bulk-actions-description">
+              These actions affect every task, including tasks hidden by filters or search.
+            </span>
+            <button type="button" onClick={handleCompleteAll} disabled={activeTasks === 0}>
+              Complete all
+            </button>
+            <button type="button" onClick={handleReopenAll} disabled={completedTasks === 0}>
+              Reopen all
+            </button>
+          </div>
         </div>
         {storageMessage && (
           <p className="storage-warning" role="status">

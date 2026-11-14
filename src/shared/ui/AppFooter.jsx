@@ -5,7 +5,7 @@ function AppFooter() {
     <footer className="app-footer">
       <div className="app-footer__identity">
         <p className="app-footer__author">Arafam Mussa Silla</p>
-        <p>Built with React · DoNext</p>
+        <p>Frontend Developer · React & DoNext</p>
       </div>
       <div className="app-footer__links">
         <a href="https://github.com/arafamdev" target="_blank" rel="noopener noreferrer">
