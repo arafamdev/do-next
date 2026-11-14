@@ -1,20 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
+
+import { createTaskWriter, loadTasks } from '../features/tasks/utils/taskStorage.js';
+import useTheme from '../shared/hooks/useTheme.js';
+
 import TaskForm from '../features/tasks/components/TaskForm.jsx';
 import TaskFilters from '../features/tasks/components/TaskFilters.jsx';
 import TaskStatistics from '../features/tasks/components/TaskStatistics.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
-import { createTaskWriter, loadTasks } from '../features/tasks/utils/taskStorage.js';
-import useTheme from '../shared/hooks/useTheme.js';
-import AppFooter from '../shared/ui/AppFooter.jsx';
 import AppHeader from '../shared/ui/AppHeader.jsx';
+import AppFooter from '../shared/ui/AppFooter.jsx';
+
 import '../styles/app.css';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
+
+  // Keep one initial storage snapshot and writer for this mounted session.
   const [initialStorage] = useState(loadTasks);
   const [tasks, setTasks] = useState(() => initialStorage.tasks);
   const [saveTasks] = useState(() => createTaskWriter(initialStorage));
   const [saveStatus, setSaveStatus] = useState('saved');
+
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const taskInputRef = useRef(null);
+  const bulkActionsRef = useRef(null);
+  const searchInputRef = useRef(null);
+
   const canPersist = initialStorage.status === 'empty' || initialStorage.status === 'valid';
   const recoveryMessages = {
     partial:
@@ -38,34 +51,34 @@ function App() {
   };
   const storageMessage = recoveryMessages[initialStorage.status] ?? saveMessages[saveStatus];
 
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  // Filters affect the list, not global statistics or bulk actions.
+  const visibleTasks = tasks.filter(matchesCriteria);
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed === true).length;
+  const activeTasks = totalTasks - completedTasks;
+  const progress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
   useEffect(() => {
     if (!canPersist) return;
+
     let ignoreResult = false;
     saveTasks(tasks).then((status) => {
       if (!ignoreResult) setSaveStatus(status);
     });
+
+    // Ignore feedback from an effect superseded by a newer task change.
     return () => {
       ignoreResult = true;
     };
   }, [tasks, canPersist, saveTasks]);
-  const taskInputRef = useRef(null);
-  const bulkActionsRef = useRef(null);
-  const searchInputRef = useRef(null);
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const normalizedQuery = searchQuery.trim().toLowerCase();
 
   function matchesCriteria(task) {
     const matchesFilter =
       activeFilter === 'all' || (activeFilter === 'active' ? !task.completed : task.completed);
     return matchesFilter && task.title.toLowerCase().includes(normalizedQuery);
   }
-
-  const visibleTasks = tasks.filter(matchesCriteria);
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((task) => task.completed === true).length;
-  const activeTasks = totalTasks - completedTasks;
-  const progress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   function handleResetFilters() {
     searchInputRef.current?.focus();
@@ -97,6 +110,11 @@ function App() {
     });
   }
 
+  function handleDeleteTask(taskId) {
+    setTasks((previousTasks) => previousTasks.filter((task) => task.id !== taskId));
+  }
+
+  // Keep focus on a mounted group when filtered cards disappear.
   function handleCompleteAll() {
     bulkActionsRef.current?.focus();
     setTasks((previousTasks) =>
@@ -115,13 +133,10 @@ function App() {
     );
   }
 
-  function handleDeleteTask(taskId) {
-    setTasks((previousTasks) => previousTasks.filter((task) => task.id !== taskId));
-  }
-
   return (
     <div className="app-shell">
       <AppHeader theme={theme} onToggleTheme={toggleTheme} />
+
       <main className="app-main">
         <TaskStatistics
           total={totalTasks}
@@ -129,6 +144,7 @@ function App() {
           completed={completedTasks}
           progress={progress}
         />
+
         <section className="tasks-panel" aria-labelledby="tasks-heading">
           <div className="tasks-panel__heading">
             <h2 id="tasks-heading">Your tasks</h2>
@@ -152,12 +168,15 @@ function App() {
               </button>
             </div>
           </div>
+
           {storageMessage && (
             <p className="storage-warning" role="status">
               {storageMessage}
             </p>
           )}
+
           <TaskForm onAddTask={handleAddTask} inputRef={taskInputRef} />
+
           <TaskFilters
             activeFilter={activeFilter}
             onFilterChange={setActiveFilter}
@@ -165,6 +184,7 @@ function App() {
             onSearchChange={setSearchQuery}
             searchInputRef={searchInputRef}
           />
+
           <TaskList
             tasks={visibleTasks}
             hasTasks={tasks.length > 0}
@@ -177,6 +197,7 @@ function App() {
           />
         </section>
       </main>
+
       <AppFooter />
     </div>
   );

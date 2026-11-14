@@ -1,3 +1,4 @@
+/* Application shell and header. */
 .app-shell {
   width: min(100% - 2rem, 60rem);
   margin-inline: auto;
@@ -53,6 +54,7 @@
   margin: var(--space-2) 0 0;
   color: var(--color-muted);
 }
+/* Global task statistics and progress. */
 .task-statistics {
   margin-bottom: var(--space-3);
   padding: clamp(1rem, 3vw, 1.5rem);
@@ -137,6 +139,7 @@
   background: var(--color-accent);
 }
 
+/* Task panel and bulk actions. */
 .tasks-panel {
   padding: clamp(1rem, 3vw, 1.5rem);
   border: 1px solid var(--color-divider);
@@ -192,6 +195,7 @@
   cursor: not-allowed;
 }
 
+/* Task creation and validation. */
 .task-form {
   margin-top: var(--space-2);
 }
@@ -252,6 +256,7 @@
   }
 }
 
+/* Empty and filtered-out results. */
 .empty-state {
   padding: clamp(2rem, 6vw, 3rem) 0;
   text-align: center;
@@ -281,6 +286,7 @@
   font-size: 0.875rem;
 }
 
+/* Scrollable task list and individual cards. */
 .task-list {
   display: grid;
   gap: 0.625rem;
@@ -352,6 +358,7 @@
   white-space: pre-wrap;
 }
 
+/* Inline editing controls. */
 .task-card__edit {
   display: inline-grid;
   place-items: center;
@@ -370,6 +377,7 @@
   background: var(--color-accent-soft);
 }
 .task-edit {
+  /* Anchor the hidden label to this card to preserve native focus scrolling. */
   position: relative;
   flex: 1;
   min-width: 0;
@@ -431,6 +439,7 @@
   }
 }
 
+/* Card actions and inline deletion confirmation. */
 .task-card__actions {
   display: flex;
   flex-wrap: wrap;
@@ -495,6 +504,7 @@
   background: var(--color-danger-soft);
 }
 
+/* Completion filters and title search. */
 .task-filters {
   display: flex;
   flex-wrap: wrap;
@@ -595,6 +605,7 @@
   margin: 0;
 }
 
+/* Small-screen layout adjustments. */
 @media (max-width: 540px) {
   .bulk-actions {
     width: 100%;
@@ -652,6 +663,7 @@
     font-size: 1.25rem;
   }
 }
+/* Persistence feedback. */
 .storage-warning {
   margin: 1rem 0;
   padding: 0.75rem 1rem;
@@ -662,6 +674,7 @@
   overflow-wrap: anywhere;
 }
 
+/* Application footer. */
 .app-footer {
   display: flex;
   flex-wrap: wrap;
@@ -712,6 +725,7 @@
   font-size: 0.75rem;
 }
 
+/* Keep the dashboard visible when the desktop viewport has enough height. */
 @media (min-width: 64rem) and (min-height: 50rem) {
   .app-shell {
     display: grid;

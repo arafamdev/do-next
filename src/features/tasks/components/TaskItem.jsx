@@ -1,20 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
+
 import { Circle, CircleCheck, Pencil, Trash2 } from 'lucide-react';
 
 function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
-  const deleteButtonRef = useRef(null);
-  const cancelDeleteRef = useRef(null);
-  const wasConfirmingDeleteRef = useRef(false);
   const [draftTitle, setDraftTitle] = useState(task.title);
   const [error, setError] = useState('');
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+
   const inputRef = useRef(null);
   const editButtonRef = useRef(null);
   const wasEditingRef = useRef(false);
+
+  const deleteButtonRef = useRef(null);
+  const cancelDeleteRef = useRef(null);
+  const wasConfirmingDeleteRef = useRef(false);
+
   const inputId = `edit-task-${task.id}`;
   const errorId = `${inputId}-error`;
 
+  // Track transitions so the first render does not steal focus.
   useEffect(() => {
     if (isEditing) {
       inputRef.current?.focus();
@@ -33,17 +38,15 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
     wasConfirmingDeleteRef.current = isConfirmingDelete;
   }, [isConfirmingDelete]);
 
-  function handleDeleteKeyDown(event) {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      setIsConfirmingDelete(false);
-    }
-  }
-
   function handleStartEditing() {
     setDraftTitle(task.title);
     setError('');
     setIsEditing(true);
+  }
+
+  function handleDraftChange(event) {
+    setDraftTitle(event.target.value);
+    setError('');
   }
 
   function handleCancel() {
@@ -55,21 +58,31 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
   function handleSave(event) {
     event.preventDefault();
     const trimmedTitle = draftTitle.trim();
+
     if (!trimmedTitle) {
       setError('Enter a task title before saving it.');
       inputRef.current?.focus();
       return;
     }
+
     // A filtered-out card unmounts; the list has already placed focus elsewhere.
     if (onUpdateTask(task.id, trimmedTitle) === false) return;
+
     setIsEditing(false);
     setError('');
   }
 
-  function handleKeyDown(event) {
+  function handleEditKeyDown(event) {
     if (event.key === 'Escape') {
       event.preventDefault();
       handleCancel();
+    }
+  }
+
+  function handleDeleteKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setIsConfirmingDelete(false);
     }
   }
 
@@ -89,27 +102,28 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
           <Circle size={22} aria-hidden="true" />
         )}
       </button>
+
       {isEditing ? (
-        <form className="task-edit" onSubmit={handleSave} onKeyDown={handleKeyDown} noValidate>
+        <form className="task-edit" onSubmit={handleSave} onKeyDown={handleEditKeyDown} noValidate>
           <label className="visually-hidden" htmlFor={inputId}>
             {`Edit title for "${task.title}"`}
           </label>
+
           <input
             ref={inputRef}
             id={inputId}
             name="title"
             value={draftTitle}
-            onChange={(event) => {
-              setDraftTitle(event.target.value);
-              setError('');
-            }}
+            onChange={handleDraftChange}
             required
             aria-invalid={Boolean(error)}
             aria-describedby={error ? errorId : undefined}
           />
+
           <p className="task-edit__error" id={errorId} aria-live="polite">
             {error}
           </p>
+
           <div className="task-edit__actions">
             <button className="task-edit__save" type="submit">
               Save
@@ -122,6 +136,7 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
       ) : (
         <>
           <span className="task-card__title">{task.title}</span>
+
           {!isConfirmingDelete && (
             <div className="task-card__actions">
               <button
@@ -144,6 +159,7 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
               </button>
             </div>
           )}
+
           {isConfirmingDelete && (
             <div
               className="task-delete"

@@ -5,6 +5,7 @@ function TaskStatistics({ total, active, completed, progress }) {
         <h2 id="statistics-heading">Your overview</h2>
         <p>Across all your tasks</p>
       </div>
+
       <dl className="task-statistics__metrics">
         <div>
           <dt>Total tasks</dt>
@@ -19,10 +20,12 @@ function TaskStatistics({ total, active, completed, progress }) {
           <dd>{completed}</dd>
         </div>
       </dl>
+
       <div className="task-statistics__progress-heading">
         <label htmlFor="overall-progress">Overall progress</label>
         <span>{progress}%</span>
       </div>
+
       <progress
         id="overall-progress"
         className="task-statistics__progress"

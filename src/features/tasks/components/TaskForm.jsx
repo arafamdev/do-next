@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Plus } from 'lucide-react';
 
 function TaskForm({ onAddTask, inputRef }) {
@@ -27,12 +28,14 @@ function TaskForm({ onAddTask, inputRef }) {
     setTitle('');
     setError('');
     setStatus('Task added.');
+    // Keep consecutive submissions usable with both pointer and keyboard.
     inputRef.current?.focus();
   }
 
   return (
     <form className="task-form" onSubmit={handleSubmit} noValidate>
       <label htmlFor="task-title">What’s your next step?</label>
+
       <div className="task-form__controls">
         <input
           ref={inputRef}
@@ -51,9 +54,11 @@ function TaskForm({ onAddTask, inputRef }) {
           Add task
         </button>
       </div>
+
       <p className="task-form__error" id="task-title-error" aria-live="polite">
         {error}
       </p>
+
       <p className="visually-hidden" role="status">
         {status}
       </p>

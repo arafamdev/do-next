@@ -7,6 +7,7 @@ function AppFooter() {
         <p className="app-footer__author">Arafam Mussa Silla</p>
         <p>Frontend Developer · React & DoNext</p>
       </div>
+
       <div className="app-footer__links">
         <a href="https://github.com/arafamdev" target="_blank" rel="noopener noreferrer">
           <CodeXml size={16} aria-hidden="true" />
@@ -17,6 +18,7 @@ function AppFooter() {
           LinkedIn
         </span>
       </div>
+
       <p className="app-footer__copyright">© {new Date().getFullYear()} Arafam Mussa Silla</p>
     </footer>
   );

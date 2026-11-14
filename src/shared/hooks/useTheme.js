@@ -6,6 +6,7 @@ function useTheme() {
     isManual: ['dark', 'light'].includes(document.documentElement.dataset.themePreference),
   }));
 
+  // Apply the root theme before paint to avoid a flash between palettes.
   useLayoutEffect(() => {
     document.documentElement.dataset.theme = selection.theme;
   }, [selection.theme]);
@@ -13,23 +14,28 @@ function useTheme() {
   useEffect(() => {
     if (selection.isManual) return;
     let media;
+
     function handleChange(event) {
+      // A manual toggle can happen before a queued system event is handled.
       setSelection((previous) =>
         previous.isManual ? previous : { theme: event.matches ? 'light' : 'dark', isManual: false },
       );
     }
+
     try {
       media = window.matchMedia('(prefers-color-scheme: light)');
       media.addEventListener('change', handleChange);
     } catch {
       return;
     }
+
     return () => media.removeEventListener('change', handleChange);
   }, [selection.isManual]);
 
   function toggleTheme() {
     const nextTheme = selection.theme === 'dark' ? 'light' : 'dark';
     setSelection({ theme: nextTheme, isManual: true });
+
     try {
       localStorage.setItem('donext.theme.v1', nextTheme);
     } catch {

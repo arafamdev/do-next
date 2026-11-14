@@ -26,11 +26,14 @@ function TaskFilters({
           </button>
         ))}
       </div>
+
       <div className="task-search">
         <label className="visually-hidden" htmlFor="task-search">
           Search tasks
         </label>
+
         <Search size={18} aria-hidden="true" />
+
         <input
           ref={searchInputRef}
           id="task-search"
@@ -39,6 +42,7 @@ function TaskFilters({
           value={searchQuery}
           onChange={(event) => onSearchChange(event.target.value)}
         />
+
         {searchQuery && (
           <button type="button" aria-label="Clear search" onClick={handleClearSearch}>
             <X size={18} aria-hidden="true" />
