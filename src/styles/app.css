@@ -120,13 +120,13 @@
   overflow: hidden;
   border: 0;
   border-radius: 1rem;
-  background: var(--color-border);
+  background: var(--color-progress-track);
   color: var(--color-accent);
   accent-color: var(--color-accent);
 }
 .task-statistics__progress::-webkit-progress-bar {
   border-radius: 1rem;
-  background: var(--color-border);
+  background: var(--color-progress-track);
 }
 .task-statistics__progress::-webkit-progress-value {
   border-radius: 1rem;

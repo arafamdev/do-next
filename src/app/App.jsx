@@ -3,7 +3,7 @@ import TaskForm from '../features/tasks/components/TaskForm.jsx';
 import TaskFilters from '../features/tasks/components/TaskFilters.jsx';
 import TaskStatistics from '../features/tasks/components/TaskStatistics.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
-import { loadTasks, saveTasks } from '../features/tasks/utils/taskStorage.js';
+import { createTaskWriter, loadTasks } from '../features/tasks/utils/taskStorage.js';
 import useTheme from '../shared/hooks/useTheme.js';
 import AppFooter from '../shared/ui/AppFooter.jsx';
 import AppHeader from '../shared/ui/AppHeader.jsx';
@@ -13,7 +13,8 @@ function App() {
   const { theme, toggleTheme } = useTheme();
   const [initialStorage] = useState(loadTasks);
   const [tasks, setTasks] = useState(() => initialStorage.tasks);
-  const [storageUnavailable, setStorageUnavailable] = useState(false);
+  const [saveTasks] = useState(() => createTaskWriter(initialStorage));
+  const [saveStatus, setSaveStatus] = useState('saved');
   const canPersist = initialStorage.status === 'empty' || initialStorage.status === 'valid';
   const recoveryMessages = {
     partial:
@@ -23,18 +24,30 @@ function App() {
     'read-error':
       'Saved tasks could not be read. Automatic saving is paused to protect existing data. Changes will only last for this session. Reload to retry loading; unsaved changes will be lost.',
   };
-  const storageMessage =
-    recoveryMessages[initialStorage.status] ??
-    (storageUnavailable
-      ? 'Tasks could not be saved in this browser. Changes will be kept only for this session until saving is available again.'
-      : '');
+  const saveMessages = {
+    conflict:
+      'Tasks changed in another tab. Saving is paused to protect saved data. Your changes remain in this tab only. Copy any changes you want to keep before reloading; reloading loads the saved version.',
+    unsupported:
+      'Safe saving is unavailable in this browser. Changes remain in this tab only and will be lost when you reload or close it.',
+    'lock-error':
+      'Safe saving could not be coordinated. Changes remain in this tab only. Keep this tab open; another task change will retry saving.',
+    'read-error':
+      'Saved tasks could not be checked. Changes remain in this tab only. Keep this tab open; another task change will retry saving.',
+    'write-error':
+      'Tasks could not be saved in this browser. Changes remain in this tab only. Keep this tab open; another task change will retry saving.',
+  };
+  const storageMessage = recoveryMessages[initialStorage.status] ?? saveMessages[saveStatus];
 
   useEffect(() => {
     if (!canPersist) return;
-    // Storage feedback depends on the result of this external synchronization.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setStorageUnavailable(!saveTasks(tasks));
-  }, [tasks, canPersist]);
+    let ignoreResult = false;
+    saveTasks(tasks).then((status) => {
+      if (!ignoreResult) setSaveStatus(status);
+    });
+    return () => {
+      ignoreResult = true;
+    };
+  }, [tasks, canPersist, saveTasks]);
   const taskInputRef = useRef(null);
   const bulkActionsRef = useRef(null);
   const searchInputRef = useRef(null);

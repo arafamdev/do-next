@@ -77,15 +77,19 @@ Operations retain the current criteria. Creation may add a hidden task; completi
 
 ## Local persistence
 
-Tasks are automatically saved under `donext.tasks.v1` in `localStorage`. `taskStorage.js` exports the key, `loadTasks` and `saveTasks`. `App` uses a lazy `useState(loadTasks)` snapshot, then initializes the task array from its recovered tasks. An effect saves task changes only when the initial read was safe. React Strict Mode may repeat initialization and effects in development; reads do not modify storage and repeated writes use the same data.
+Tasks are automatically saved under `donext.tasks.v1` in `localStorage`. `taskStorage.js` exports the key, `loadTasks` and `createTaskWriter`. `App` uses a lazy `useState(loadTasks)` snapshot, then initializes the task array from its recovered tasks. An effect saves task changes only when the initial read was safe. React Strict Mode may repeat initialization and effects in development; reads do not modify storage and unchanged task arrays do not trigger storage writes.
 
-The stored array preserves `{ id, title, completed }` and task order. Loading accepts non-empty string IDs and titles and boolean completion values. Invalid entries are skipped; the first valid entry for each ID wins. No replacement IDs or type coercions are used. `loadTasks` returns `{ tasks, status }`, distinguishing `empty`, `valid`, `partial`, `invalid` and `read-error`. Empty storage and fully valid arrays permit automatic saving, including saving an empty array after deleting the last task. Partial data recovers valid entries in order but pauses saving for the entire session. Invalid JSON, unexpected formats and read errors also pause saving. No recovery or loading path writes to storage, and no automatic write is attempted in these blocked sessions, even after CRUD operations.
+The stored array preserves `{ id, title, completed }` and task order. Loading accepts non-empty string IDs and titles and boolean completion values. Invalid entries are skipped; the first valid entry for each ID wins. No replacement IDs or type coercions are used. `loadTasks` returns `{ tasks, status, snapshot }` after a successful storage read, distinguishing `empty`, `valid`, `partial`, `invalid` and `read-error`. Empty storage and fully valid arrays permit automatic saving, including saving an empty array after deleting the last task. Partial data recovers valid entries in order but pauses saving for the entire session. Invalid JSON, unexpected formats and read errors also pause saving. No recovery or loading path writes to storage, and no automatic write is attempted in these blocked sessions, even after CRUD operations.
 
 Separate accessible messages explain partial recovery, invalid data, read failure and write failure. Original stored values remain untouched in recovery sessions. There is no overwrite/reset action: reload can retry reading after the underlying problem is resolved, but discards unsaved session changes. This deliberately avoids replacing potentially recoverable information without informed consent.
 
 Write errors do not interrupt the in-memory application. A discrete status message warns that changes have not been saved; it remains visible until a later task change saves successfully. Filters, search, drafts, confirmations and focus state are not persisted.
 
-Storage belongs to the browser profile and origin (including protocol, hostname and port); it does not synchronize across devices. Clearing browser data, private browsing, browser restrictions or quota limits can remove or prevent persistence. This is local convenience storage, not a backup. Concurrent tabs are not synchronized and the latest write wins.
+Storage belongs to the browser profile and origin (including protocol, hostname and port); it does not synchronize across devices. Clearing browser data, private browsing, browser restrictions or quota limits can remove or prevent persistence. This is local convenience storage, not a backup. Concurrent tabs are not automatically synchronized. Each writer uses an exclusive Web Lock named `donext.tasks.v1` and compares the stored string with its last known snapshot inside that lock before writing. The snapshot advances inside the lock after a successful write. An external change permanently pauses saving in the stale tab, preserving its local edits in memory and showing an accessible warning. Copy unsaved changes before reloading; reload loads the saved version and discards local edits. No automatic merge or overwrite is attempted.
+
+Without Web Locks, saving is blocked with a warning; the application remains usable in memory. Coordination failures also block writes. Read/write failures can retry on the next task change. This protection covers tabs running this implementation and using the same lock; old versions, developer tools and external writers that ignore the lock cannot be coordinated. A `storage` listener alone, or a read immediately before an unlocked write, would not serialize competing writes.
+
+Run the focused storage tests with `node --test src/features/tasks/utils/taskStorage.test.js`. They exercise stale snapshots, overlapping saves, recovery, coordination fallback and read/write failures using isolated storage and lock mocks.
 
 ## Statistics and progress
 
@@ -138,7 +142,7 @@ Buttons are disabled when no task needs that action. Focus moves to the stable, 
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks remain available after reload and new sessions while local storage is available.
+Tasks remain available after reload and new sessions when local storage and safe write coordination are available and saving has succeeded.
 
 ## Roadmap
 

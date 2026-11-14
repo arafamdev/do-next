@@ -23,6 +23,7 @@
   --color-danger-soft: #3a2028;
   --color-error: #ffb4b4;
   --color-accent-soft: #1c3b33;
+  --color-progress-track: var(--color-border);
   --shadow-panel: 0 12px 36px rgb(0 0 0 / 12%);
   --space-1: 0.5rem;
   --space-2: 1rem;
@@ -48,6 +49,7 @@
   --color-danger-soft: #fce8ec;
   --color-error: #a1263c;
   --color-accent-soft: #dcefe5;
+  --color-progress-track: var(--color-divider);
   --shadow-panel: 0 12px 36px rgb(23 46 37 / 5%);
 }
 
