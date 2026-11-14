@@ -70,7 +70,7 @@ function TaskItem({ task, onToggleTask, onUpdateTask }) {
       {isEditing ? (
         <form className="task-edit" onSubmit={handleSave} onKeyDown={handleKeyDown} noValidate>
           <label className="visually-hidden" htmlFor={inputId}>
-            Edit task title
+            {`Edit title for "${task.title}"`}
           </label>
           <input
             ref={inputRef}

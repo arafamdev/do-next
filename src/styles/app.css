@@ -208,19 +208,6 @@
   white-space: pre-wrap;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .task-card__toggle {
-    transition: none;
-  }
-}
-
-.app-footer {
-  margin-top: var(--space-4);
-  text-align: center;
-  color: var(--color-muted);
-  font-size: 0.8125rem;
-}
-
 .task-card__edit {
   display: inline-grid;
   place-items: center;
@@ -290,4 +277,17 @@
 }
 .task-edit__cancel:hover {
   background: var(--color-accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-card__toggle {
+    transition: none;
+  }
+}
+
+.app-footer {
+  margin-top: var(--space-4);
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
 }
