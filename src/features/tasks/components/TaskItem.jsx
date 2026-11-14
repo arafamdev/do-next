@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Circle, CircleCheck, Pencil } from 'lucide-react';
+import { Circle, CircleCheck, Pencil, Trash2 } from 'lucide-react';
 
-function TaskItem({ task, onToggleTask, onUpdateTask }) {
+function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const deleteButtonRef = useRef(null);
+  const cancelDeleteRef = useRef(null);
+  const wasConfirmingDeleteRef = useRef(false);
   const [draftTitle, setDraftTitle] = useState(task.title);
   const [error, setError] = useState('');
   const inputRef = useRef(null);
@@ -19,6 +23,22 @@ function TaskItem({ task, onToggleTask, onUpdateTask }) {
     }
     wasEditingRef.current = isEditing;
   }, [isEditing]);
+
+  useEffect(() => {
+    if (isConfirmingDelete) {
+      cancelDeleteRef.current?.focus();
+    } else if (wasConfirmingDeleteRef.current) {
+      deleteButtonRef.current?.focus();
+    }
+    wasConfirmingDeleteRef.current = isConfirmingDelete;
+  }, [isConfirmingDelete]);
+
+  function handleDeleteKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setIsConfirmingDelete(false);
+    }
+  }
 
   function handleStartEditing() {
     setDraftTitle(task.title);
@@ -100,15 +120,58 @@ function TaskItem({ task, onToggleTask, onUpdateTask }) {
       ) : (
         <>
           <span className="task-card__title">{task.title}</span>
-          <button
-            ref={editButtonRef}
-            className="task-card__edit"
-            type="button"
-            aria-label={`Edit "${task.title}"`}
-            onClick={handleStartEditing}
-          >
-            <Pencil size={18} aria-hidden="true" />
-          </button>
+          {!isConfirmingDelete && (
+            <div className="task-card__actions">
+              <button
+                ref={editButtonRef}
+                className="task-card__edit"
+                type="button"
+                aria-label={`Edit "${task.title}"`}
+                onClick={handleStartEditing}
+              >
+                <Pencil size={18} aria-hidden="true" />
+              </button>
+              <button
+                ref={deleteButtonRef}
+                className="task-card__delete"
+                type="button"
+                aria-label={`Delete "${task.title}"`}
+                onClick={() => setIsConfirmingDelete(true)}
+              >
+                <Trash2 size={18} aria-hidden="true" />
+              </button>
+            </div>
+          )}
+          {isConfirmingDelete && (
+            <div
+              className="task-delete"
+              role="group"
+              aria-labelledby={`delete-heading-${task.id}`}
+              aria-describedby={`delete-description-${task.id}`}
+              onKeyDown={handleDeleteKeyDown}
+            >
+              <p id={`delete-heading-${task.id}`} className="task-delete__heading">
+                Delete this task?
+              </p>
+              <p id={`delete-description-${task.id}`}>This action cannot be undone.</p>
+              <div className="task-delete__actions">
+                <button
+                  ref={cancelDeleteRef}
+                  type="button"
+                  onClick={() => setIsConfirmingDelete(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="task-delete__confirm"
+                  type="button"
+                  onClick={() => onDeleteTask(task.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </li>

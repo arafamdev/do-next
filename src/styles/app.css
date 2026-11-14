@@ -285,6 +285,76 @@
   }
 }
 
+.task-card {
+  flex-wrap: wrap;
+}
+.task-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.task-card__title {
+  flex-basis: 5rem;
+}
+.task-card__delete {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  color: var(--color-danger);
+  background: transparent;
+  cursor: pointer;
+}
+.task-card__delete:hover {
+  background: var(--color-danger-soft);
+}
+.task-delete {
+  flex-basis: 100%;
+  min-width: 0;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-border);
+}
+.task-delete p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+.task-delete .task-delete__heading {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.task-delete__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.task-delete__actions button {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+.task-delete__actions button:hover {
+  background: var(--color-accent-soft);
+}
+.task-delete__actions .task-delete__confirm {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+.task-delete__actions .task-delete__confirm:hover {
+  background: var(--color-danger-soft);
+}
+
 .app-footer {
   margin-top: var(--space-4);
   text-align: center;

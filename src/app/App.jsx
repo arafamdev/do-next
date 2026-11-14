@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import TaskForm from '../features/tasks/components/TaskForm.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
 import AppHeader from '../shared/ui/AppHeader.jsx';
@@ -6,6 +6,7 @@ import '../styles/app.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const taskInputRef = useRef(null);
 
   function handleAddTask(title) {
     const newTask = { id: crypto.randomUUID(), title, completed: false };
@@ -31,6 +32,10 @@ function App() {
     });
   }
 
+  function handleDeleteTask(taskId) {
+    setTasks((previousTasks) => previousTasks.filter((task) => task.id !== taskId));
+  }
+
   return (
     <main className="app-shell">
       <AppHeader />
@@ -39,8 +44,14 @@ function App() {
           <h2 id="tasks-heading">Your tasks</h2>
           <span className="tasks-panel__caption">A little clarity, every day.</span>
         </div>
-        <TaskForm onAddTask={handleAddTask} />
-        <TaskList tasks={tasks} onToggleTask={handleToggleTask} onUpdateTask={handleUpdateTask} />
+        <TaskForm onAddTask={handleAddTask} inputRef={taskInputRef} />
+        <TaskList
+          tasks={tasks}
+          onToggleTask={handleToggleTask}
+          onUpdateTask={handleUpdateTask}
+          onDeleteTask={handleDeleteTask}
+          taskInputRef={taskInputRef}
+        />
       </section>
       <footer className="app-footer">One task at a time.</footer>
     </main>

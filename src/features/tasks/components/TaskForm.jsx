@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
-function TaskForm({ onAddTask }) {
+function TaskForm({ onAddTask, inputRef }) {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
-  const inputRef = useRef(null);
 
   function handleChange(event) {
     setTitle(event.target.value);

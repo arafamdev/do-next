@@ -64,6 +64,8 @@ public/
 
 `TaskItem` owns its inline editing state: the draft title, validation error and whether the editor is open. The Pencil button opens a labelled input with the current title. Save or Enter trims and validates the draft before calling `onUpdateTask`; Cancel or Escape discards it. Losing focus does not save. Focus moves into the editor and returns to the edit button when it closes. `App` updates only the matching title, preserves the ID and completion state, and returns the previous array when the title is unchanged.
 
+Deletion is managed by `handleDeleteTask` in `App`, using a functional update and `filter()` to preserve the remaining tasks and their order. `onDeleteTask` passes through `TaskList` to `TaskItem`. Each item owns its inline confirmation state. Delete opens a non-modal confirmation with Cancel focused first; Cancel or Escape restores focus to the Delete icon. Confirmation is unavailable during editing. After deletion, `TaskList` focuses the next task’s completion button, then the previous task’s button if there is no next task, or the creation input when the list becomes empty. Deletion cannot be undone.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
@@ -75,21 +77,21 @@ public/
 - Dynamic task list with support for long titles
 - Task completion and reopening with mouse and keyboard support
 - Inline task editing with Save, Cancel, Enter, Escape and accessible validation
+- Task deletion with inline confirmation, keyboard cancellation and focus management
 - Keyboard submission and input focus management
 - Lucide React icons with a visibly labelled add button
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks are stored only in React state and are lost on reload. Deletion, filters, persistence, statistics and a light theme are not implemented.
+Tasks are stored only in React state and are lost on reload. Filters, persistence, statistics and a light theme are not implemented.
 
 ## Roadmap
 
-1. Task deletion
-2. Filters and search
-3. Local storage persistence and invalid-data handling
-4. Statistics and progress
-5. Light theme and saved preference
-6. Accessibility review, interaction polish, tests and deployment
+1. Filters and search
+2. Local storage persistence and invalid-data handling
+3. Statistics and progress
+4. Light theme and saved preference
+5. Accessibility review, interaction polish, tests and deployment
 
 ## Maintenance
 

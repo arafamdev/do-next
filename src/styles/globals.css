@@ -18,6 +18,8 @@
   --color-input: #0e181b;
   --color-accent-hover: #8de8c3;
   --color-on-accent: #102c22;
+  --color-danger: #f5a3a8;
+  --color-danger-soft: #3a2028;
   --color-error: #ffb4b4;
   --color-accent-soft: #1c3b33;
   --shadow-panel: 0 24px 64px rgb(0 0 0 / 18%);
