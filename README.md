@@ -47,6 +47,7 @@ src/
   features/tasks/components/TaskList.jsx
   features/tasks/components/TaskItem.jsx
   features/tasks/components/TaskFilters.jsx
+  features/tasks/utils/taskStorage.js
   shared/ui/AppHeader.jsx
   styles/app.css
   styles/globals.css
@@ -71,6 +72,16 @@ Deletion is managed by `handleDeleteTask` in `App`, using a functional update an
 
 Operations retain the current criteria. Creation may add a hidden task; completion, reopening or editing can remove a card from the current view. `TaskList` moves focus to a surviving visible control or the creation input before such a card disappears. Search typing never triggers this focus handling. Search results are rendered without live announcements on each keystroke to avoid excessive speech.
 
+## Local persistence
+
+Tasks are automatically saved under `donext.tasks.v1` in `localStorage`. `taskStorage.js` exports the key, `loadTasks` and `saveTasks`. `App` uses `useState(loadTasks)` to read once per initialization and an effect depending only on `tasks` to save changes. React Strict Mode may repeat initialization and effects in development; reads do not modify storage and repeated writes use the same data.
+
+The stored array preserves `{ id, title, completed }` and task order. Loading accepts non-empty string IDs and titles and boolean completion values. Invalid entries are skipped; the first valid entry for each ID wins. No replacement IDs or type coercions are used. Missing data, invalid JSON, non-array values or read errors produce an empty initial array. The next successful save writes the validated current state, replacing the previous stored value.
+
+Write errors do not interrupt the in-memory application. A discrete status message warns that changes have not been saved; it remains visible until a later task change saves successfully. Filters, search, drafts, confirmations and focus state are not persisted.
+
+Storage belongs to the browser profile and origin (including protocol, hostname and port); it does not synchronize across devices. Clearing browser data, private browsing, browser restrictions or quota limits can remove or prevent persistence. This is local convenience storage, not a backup. Concurrent tabs are not synchronized and the latest write wins.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
@@ -84,20 +95,20 @@ Operations retain the current criteria. Creation may add a hidden task; completi
 - Inline task editing with Save, Cancel, Enter, Escape and accessible validation
 - Task deletion with inline confirmation, keyboard cancellation and focus management
 - Combined All / Active / Completed filters and controlled title search
+- Automatic local task persistence with validation and write-failure feedback
 - Contextual no-results state with a reset action
 - Keyboard submission and input focus management
 - Lucide React icons with a visibly labelled add button
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks are stored only in React state and are lost on reload. Persistence, statistics and a light theme are not implemented.
+Tasks remain available after reload and new sessions while local storage is available. Statistics and a light theme are not implemented.
 
 ## Roadmap
 
-1. Local storage persistence and invalid-data handling
-2. Statistics and progress
-3. Light theme and saved preference
-4. Accessibility review, interaction polish, tests and deployment
+1. Statistics and progress
+2. Light theme and saved preference
+3. Accessibility review, interaction polish, tests and deployment
 
 ## Maintenance
 

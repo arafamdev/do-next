@@ -1,12 +1,20 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TaskForm from '../features/tasks/components/TaskForm.jsx';
 import TaskFilters from '../features/tasks/components/TaskFilters.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
+import { loadTasks, saveTasks } from '../features/tasks/utils/taskStorage.js';
 import AppHeader from '../shared/ui/AppHeader.jsx';
 import '../styles/app.css';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(loadTasks);
+  const [storageUnavailable, setStorageUnavailable] = useState(false);
+
+  useEffect(() => {
+    // Storage feedback depends on the result of this external synchronization.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStorageUnavailable(!saveTasks(tasks));
+  }, [tasks]);
   const taskInputRef = useRef(null);
   const searchInputRef = useRef(null);
   const [activeFilter, setActiveFilter] = useState('all');
@@ -63,6 +71,12 @@ function App() {
           <h2 id="tasks-heading">Your tasks</h2>
           <span className="tasks-panel__caption">A little clarity, every day.</span>
         </div>
+        {storageUnavailable && (
+          <p className="storage-warning" role="status">
+            Tasks could not be saved in this browser. Changes will be kept only for this session
+            until saving is available again.
+          </p>
+        )}
         <TaskForm onAddTask={handleAddTask} inputRef={taskInputRef} />
         <TaskFilters
           activeFilter={activeFilter}
