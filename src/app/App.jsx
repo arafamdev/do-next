@@ -120,63 +120,65 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
+    <div className="app-shell">
       <AppHeader theme={theme} onToggleTheme={toggleTheme} />
-      <TaskStatistics
-        total={totalTasks}
-        active={activeTasks}
-        completed={completedTasks}
-        progress={progress}
-      />
-      <section className="tasks-panel" aria-labelledby="tasks-heading">
-        <div className="tasks-panel__heading">
-          <h2 id="tasks-heading">Your tasks</h2>
-          <div
-            className="bulk-actions"
-            ref={bulkActionsRef}
-            role="group"
-            aria-label="Actions for all tasks"
-            aria-describedby="bulk-actions-description"
-            tabIndex={-1}
-          >
-            <span className="bulk-actions__label">All tasks</span>
-            <span className="visually-hidden" id="bulk-actions-description">
-              These actions affect every task, including tasks hidden by filters or search.
-            </span>
-            <button type="button" onClick={handleCompleteAll} disabled={activeTasks === 0}>
-              Complete all
-            </button>
-            <button type="button" onClick={handleReopenAll} disabled={completedTasks === 0}>
-              Reopen all
-            </button>
+      <main className="app-main">
+        <TaskStatistics
+          total={totalTasks}
+          active={activeTasks}
+          completed={completedTasks}
+          progress={progress}
+        />
+        <section className="tasks-panel" aria-labelledby="tasks-heading">
+          <div className="tasks-panel__heading">
+            <h2 id="tasks-heading">Your tasks</h2>
+            <div
+              className="bulk-actions"
+              ref={bulkActionsRef}
+              role="group"
+              aria-label="Actions for all tasks"
+              aria-describedby="bulk-actions-description"
+              tabIndex={-1}
+            >
+              <span className="bulk-actions__label">All tasks</span>
+              <span className="visually-hidden" id="bulk-actions-description">
+                These actions affect every task, including tasks hidden by filters or search.
+              </span>
+              <button type="button" onClick={handleCompleteAll} disabled={activeTasks === 0}>
+                Complete all
+              </button>
+              <button type="button" onClick={handleReopenAll} disabled={completedTasks === 0}>
+                Reopen all
+              </button>
+            </div>
           </div>
-        </div>
-        {storageMessage && (
-          <p className="storage-warning" role="status">
-            {storageMessage}
-          </p>
-        )}
-        <TaskForm onAddTask={handleAddTask} inputRef={taskInputRef} />
-        <TaskFilters
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          searchInputRef={searchInputRef}
-        />
-        <TaskList
-          tasks={visibleTasks}
-          hasTasks={tasks.length > 0}
-          matchesCriteria={matchesCriteria}
-          onResetFilters={handleResetFilters}
-          onToggleTask={handleToggleTask}
-          onUpdateTask={handleUpdateTask}
-          onDeleteTask={handleDeleteTask}
-          taskInputRef={taskInputRef}
-        />
-      </section>
+          {storageMessage && (
+            <p className="storage-warning" role="status">
+              {storageMessage}
+            </p>
+          )}
+          <TaskForm onAddTask={handleAddTask} inputRef={taskInputRef} />
+          <TaskFilters
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchInputRef={searchInputRef}
+          />
+          <TaskList
+            tasks={visibleTasks}
+            hasTasks={tasks.length > 0}
+            matchesCriteria={matchesCriteria}
+            onResetFilters={handleResetFilters}
+            onToggleTask={handleToggleTask}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+            taskInputRef={taskInputRef}
+          />
+        </section>
+      </main>
       <AppFooter />
-    </main>
+    </div>
   );
 }
 

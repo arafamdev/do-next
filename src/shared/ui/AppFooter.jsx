@@ -1,4 +1,4 @@
-import { CodeXml, BriefcaseBusiness } from 'lucide-react';
+import { CodeXml } from 'lucide-react';
 
 function AppFooter() {
   return (
@@ -12,10 +12,6 @@ function AppFooter() {
           <CodeXml size={16} aria-hidden="true" />
           GitHub<span className="visually-hidden"> (opens in a new tab)</span>
         </a>
-        <span className="app-footer__upcoming">
-          <BriefcaseBusiness size={16} aria-hidden="true" />
-          LinkedIn <span>Coming soon</span>
-        </span>
       </div>
       <p className="app-footer__copyright">© {new Date().getFullYear()} Arafam Mussa Silla</p>
     </footer>
