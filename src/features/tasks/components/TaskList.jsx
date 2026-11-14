@@ -16,9 +16,12 @@ function TaskList({
 
   function focusAfterRemoval(taskId) {
     const index = tasks.findIndex((task) => task.id === taskId);
-    const cards = listRef.current?.children;
-    const nextCard = cards?.[index + 1] ?? cards?.[index - 1];
-    const focusTarget = nextCard?.querySelector('button:not(:disabled)') ?? taskInputRef.current;
+    const cards = Array.from(listRef.current?.children ?? []);
+    const candidates = [...cards.slice(index + 1), ...cards.slice(0, index).reverse()];
+    const focusTarget =
+      candidates
+        .map((card) => card.querySelector(':scope > .task-card__toggle:not(:disabled)'))
+        .find(Boolean) ?? taskInputRef.current;
     // Move focus before an operation removes its card from the visible list.
     focusTarget?.focus();
   }
@@ -37,8 +40,10 @@ function TaskList({
 
   function handleUpdate(taskId, newTitle) {
     const task = tasks.find((task) => task.id === taskId);
-    if (task && !matchesCriteria({ ...task, title: newTitle })) focusAfterRemoval(taskId);
+    const remainsVisible = Boolean(task && matchesCriteria({ ...task, title: newTitle }));
+    if (!remainsVisible) focusAfterRemoval(taskId);
     onUpdateTask(taskId, newTitle);
+    return remainsVisible;
   }
 
   if (tasks.length === 0 && hasTasks) {

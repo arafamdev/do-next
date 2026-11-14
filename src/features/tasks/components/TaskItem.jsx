@@ -60,7 +60,8 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
       inputRef.current?.focus();
       return;
     }
-    onUpdateTask(task.id, trimmedTitle);
+    // A filtered-out card unmounts; the list has already placed focus elsewhere.
+    if (onUpdateTask(task.id, trimmedTitle) === false) return;
     setIsEditing(false);
     setError('');
   }
