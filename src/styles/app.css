@@ -692,11 +692,14 @@
   align-items: center;
   gap: 0.5rem 1rem;
 }
-.app-footer a {
+.app-footer a,
+.app-footer__label {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   min-height: 2.75rem;
+}
+.app-footer a {
   color: var(--color-text);
   text-underline-offset: 0.25em;
   border-radius: 0.25rem;
