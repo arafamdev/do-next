@@ -1,12 +1,18 @@
 export const TASKS_STORAGE_KEY = 'donext.tasks.v1';
 
 export function loadTasks() {
+  let storedTasks;
   try {
-    const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
-    if (storedTasks === null) return [];
+    storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+  } catch {
+    return { tasks: [], status: 'read-error' };
+  }
 
+  if (storedTasks === null) return { tasks: [], status: 'empty' };
+
+  try {
     const parsedTasks = JSON.parse(storedTasks);
-    if (!Array.isArray(parsedTasks)) return [];
+    if (!Array.isArray(parsedTasks)) return { tasks: [], status: 'invalid' };
 
     const seenIds = new Set();
     const validTasks = [];
@@ -30,9 +36,15 @@ export function loadTasks() {
       validTasks.push({ id: task.id, title: task.title, completed: task.completed });
     }
 
-    return validTasks;
+    const status =
+      validTasks.length === parsedTasks.length
+        ? 'valid'
+        : validTasks.length > 0
+          ? 'partial'
+          : 'invalid';
+    return { tasks: validTasks, status };
   } catch {
-    return [];
+    return { tasks: [], status: 'invalid' };
   }
 }
 

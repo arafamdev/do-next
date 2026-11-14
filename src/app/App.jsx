@@ -7,14 +7,30 @@ import AppHeader from '../shared/ui/AppHeader.jsx';
 import '../styles/app.css';
 
 function App() {
-  const [tasks, setTasks] = useState(loadTasks);
+  const [initialStorage] = useState(loadTasks);
+  const [tasks, setTasks] = useState(() => initialStorage.tasks);
   const [storageUnavailable, setStorageUnavailable] = useState(false);
+  const canPersist = initialStorage.status === 'empty' || initialStorage.status === 'valid';
+  const recoveryMessages = {
+    partial:
+      'Some saved tasks could not be recovered. Valid tasks are shown, but changes will only last for this session. The original stored data has been preserved.',
+    invalid:
+      'Saved task data is invalid and could not be loaded. Changes will only last for this session. The original stored data has been preserved.',
+    'read-error':
+      'Saved tasks could not be read. Automatic saving is paused to protect existing data. Changes will only last for this session. Reload to retry loading; unsaved changes will be lost.',
+  };
+  const storageMessage =
+    recoveryMessages[initialStorage.status] ??
+    (storageUnavailable
+      ? 'Tasks could not be saved in this browser. Changes will be kept only for this session until saving is available again.'
+      : '');
 
   useEffect(() => {
+    if (!canPersist) return;
     // Storage feedback depends on the result of this external synchronization.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStorageUnavailable(!saveTasks(tasks));
-  }, [tasks]);
+  }, [tasks, canPersist]);
   const taskInputRef = useRef(null);
   const searchInputRef = useRef(null);
   const [activeFilter, setActiveFilter] = useState('all');
@@ -71,10 +87,9 @@ function App() {
           <h2 id="tasks-heading">Your tasks</h2>
           <span className="tasks-panel__caption">A little clarity, every day.</span>
         </div>
-        {storageUnavailable && (
+        {storageMessage && (
           <p className="storage-warning" role="status">
-            Tasks could not be saved in this browser. Changes will be kept only for this session
-            until saving is available again.
+            {storageMessage}
           </p>
         )}
         <TaskForm onAddTask={handleAddTask} inputRef={taskInputRef} />
