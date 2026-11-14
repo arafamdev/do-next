@@ -46,6 +46,7 @@ src/
   features/tasks/components/TaskForm.jsx
   features/tasks/components/TaskList.jsx
   features/tasks/components/TaskItem.jsx
+  features/tasks/components/TaskFilters.jsx
   shared/ui/AppHeader.jsx
   styles/app.css
   styles/globals.css
@@ -66,6 +67,10 @@ public/
 
 Deletion is managed by `handleDeleteTask` in `App`, using a functional update and `filter()` to preserve the remaining tasks and their order. `onDeleteTask` passes through `TaskList` to `TaskItem`. Each item owns its inline confirmation state. Delete opens a non-modal confirmation with Cancel focused first; Cancel or Escape restores focus to the Delete icon. Confirmation is unavailable during editing. After deletion, `TaskList` focuses the next task’s completion button, then the previous task’s button if there is no next task, or the creation input when the list becomes empty. Deletion cannot be undone.
 
+`TaskFilters` receives controlled filter and search values from `App`. All is selected initially; Active shows pending tasks and Completed shows completed tasks. Search matches titles case-insensitively and trims the query. `visibleTasks` is derived with `filter()` from the task array and both criteria, preserving order without a second task state or synchronization effects. Clear search retains the current filter; the no-results reset clears both criteria. The original empty state is reserved for an empty task array.
+
+Operations retain the current criteria. Creation may add a hidden task; completion, reopening or editing can remove a card from the current view. `TaskList` moves focus to a surviving visible control or the creation input before such a card disappears. Search typing never triggers this focus handling. Search results are rendered without live announcements on each keystroke to avoid excessive speech.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
@@ -78,20 +83,21 @@ Deletion is managed by `handleDeleteTask` in `App`, using a functional update an
 - Task completion and reopening with mouse and keyboard support
 - Inline task editing with Save, Cancel, Enter, Escape and accessible validation
 - Task deletion with inline confirmation, keyboard cancellation and focus management
+- Combined All / Active / Completed filters and controlled title search
+- Contextual no-results state with a reset action
 - Keyboard submission and input focus management
 - Lucide React icons with a visibly labelled add button
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks are stored only in React state and are lost on reload. Filters, persistence, statistics and a light theme are not implemented.
+Tasks are stored only in React state and are lost on reload. Persistence, statistics and a light theme are not implemented.
 
 ## Roadmap
 
-1. Filters and search
-2. Local storage persistence and invalid-data handling
-3. Statistics and progress
-4. Light theme and saved preference
-5. Accessibility review, interaction polish, tests and deployment
+1. Local storage persistence and invalid-data handling
+2. Statistics and progress
+3. Light theme and saved preference
+4. Accessibility review, interaction polish, tests and deployment
 
 ## Maintenance
 

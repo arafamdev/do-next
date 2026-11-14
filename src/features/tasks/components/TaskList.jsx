@@ -2,17 +2,55 @@ import { useRef } from 'react';
 import { Check } from 'lucide-react';
 import TaskItem from './TaskItem.jsx';
 
-function TaskList({ tasks, onToggleTask, onUpdateTask, onDeleteTask, taskInputRef }) {
+function TaskList({
+  tasks,
+  onToggleTask,
+  onUpdateTask,
+  onDeleteTask,
+  taskInputRef,
+  hasTasks,
+  matchesCriteria,
+  onResetFilters,
+}) {
   const listRef = useRef(null);
 
-  function handleDelete(taskId) {
+  function focusAfterRemoval(taskId) {
     const index = tasks.findIndex((task) => task.id === taskId);
     const cards = listRef.current?.children;
     const nextCard = cards?.[index + 1] ?? cards?.[index - 1];
-    const focusTarget = nextCard?.querySelector('button') ?? taskInputRef.current;
-    // Focus a surviving control before the deleted card unmounts.
+    const focusTarget = nextCard?.querySelector('button:not(:disabled)') ?? taskInputRef.current;
+    // Move focus before an operation removes its card from the visible list.
     focusTarget?.focus();
+  }
+
+  function handleDelete(taskId) {
+    focusAfterRemoval(taskId);
     onDeleteTask(taskId);
+  }
+
+  function handleToggle(taskId) {
+    const task = tasks.find((task) => task.id === taskId);
+    if (task && !matchesCriteria({ ...task, completed: !task.completed }))
+      focusAfterRemoval(taskId);
+    onToggleTask(taskId);
+  }
+
+  function handleUpdate(taskId, newTitle) {
+    const task = tasks.find((task) => task.id === taskId);
+    if (task && !matchesCriteria({ ...task, title: newTitle })) focusAfterRemoval(taskId);
+    onUpdateTask(taskId, newTitle);
+  }
+
+  if (tasks.length === 0 && hasTasks) {
+    return (
+      <div className="empty-state">
+        <h3>No matching tasks found.</h3>
+        <p>Try another search or reset your filters to see all tasks.</p>
+        <button className="task-filters__reset" type="button" onClick={onResetFilters}>
+          Clear search and show all
+        </button>
+      </div>
+    );
   }
 
   if (tasks.length === 0) {
@@ -34,8 +72,8 @@ function TaskList({ tasks, onToggleTask, onUpdateTask, onDeleteTask, taskInputRe
         <TaskItem
           key={task.id}
           task={task}
-          onToggleTask={onToggleTask}
-          onUpdateTask={onUpdateTask}
+          onToggleTask={handleToggle}
+          onUpdateTask={handleUpdate}
           onDeleteTask={handleDelete}
         />
       ))}
