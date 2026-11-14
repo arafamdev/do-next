@@ -12,6 +12,14 @@ function App() {
     setTasks((previousTasks) => [...previousTasks, newTask]);
   }
 
+  function handleToggleTask(taskId) {
+    setTasks((previousTasks) =>
+      previousTasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  }
+
   return (
     <main className="app-shell">
       <AppHeader />
@@ -21,7 +29,7 @@ function App() {
           <span className="tasks-panel__caption">A little clarity, every day.</span>
         </div>
         <TaskForm onAddTask={handleAddTask} />
-        <TaskList tasks={tasks} />
+        <TaskList tasks={tasks} onToggleTask={handleToggleTask} />
       </section>
       <footer className="app-footer">One task at a time.</footer>
     </main>

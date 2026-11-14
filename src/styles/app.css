@@ -168,15 +168,48 @@
   border-radius: 0.875rem;
   background: var(--color-input);
 }
-.task-card__icon {
+.task-card__toggle {
+  display: inline-grid;
+  place-items: center;
   flex-shrink: 0;
-  margin-top: 0.2rem;
-  color: var(--color-accent);
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  color: var(--color-muted);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
 }
-.task-card span {
+.task-card__toggle:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+.task-card__toggle[aria-pressed='true'] {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+.task-card--completed .task-card__title {
+  color: var(--color-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.task-card__title {
+  align-self: center;
   min-width: 0;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-card__toggle {
+    transition: none;
+  }
 }
 
 .app-footer {

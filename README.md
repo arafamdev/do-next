@@ -53,11 +53,13 @@ public/
   favicon.svg
 ```
 
-`main.jsx` mounts React and loads global styles. `App` owns the task array and passes an `onAddTask` callback to `TaskForm` and the tasks to `TaskList`. `AppHeader` presents the application identity. Global styles define the palette, spacing tokens and focus treatment; application styles group the layout, form, empty state and task cards.
+`main.jsx` mounts React and loads global styles. `App` owns the task array and passes an `onAddTask` callback to `TaskForm` and the tasks plus an `onToggleTask` callback to `TaskList`. `AppHeader` presents the application identity. Global styles define the palette, spacing tokens and focus treatment; application styles group the layout, form, empty state and task cards.
 
 `TaskForm` uses a controlled input, trims the title and rejects empty or whitespace-only submissions. Errors are associated with the input and announced through a live region. After creation, the field clears, focus returns to it and a status message announces success. Tasks can be submitted with Enter or the add button.
 
 `App` creates each task as `{ id, title, completed }`, using `crypto.randomUUID()` and an immutable state update. `TaskList` renders semantic list items with stable IDs as keys, or the original empty state when there are no tasks.
+
+`handleToggleTask` maps over the previous task array and replaces only the matching task with a copy whose `completed` value is inverted. IDs, titles and other tasks remain unchanged. Each task has a native toggle button with `aria-pressed`, a task-specific action label and visible keyboard focus. Completed tasks show a confirmation icon and a struck-through, muted title. Activate the button again to reopen the task.
 
 ## Implemented
 
@@ -68,16 +70,17 @@ public/
 - CSS variables for future theme support
 - Task creation with title validation and accessible feedback
 - Dynamic task list with support for long titles
+- Task completion and reopening with mouse and keyboard support
 - Keyboard submission and input focus management
 - Lucide React icons with a visibly labelled add button
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks are stored only in React state and are lost on reload. Completion, editing, deletion, filters, persistence, statistics and a light theme are not implemented.
+Tasks are stored only in React state and are lost on reload. Editing, deletion, filters, persistence, statistics and a light theme are not implemented.
 
 ## Roadmap
 
-1. Completion, editing and deletion
+1. Editing and deletion
 2. Filters and search
 3. Local storage persistence and invalid-data handling
 4. Statistics and progress
