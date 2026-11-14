@@ -6,6 +6,34 @@
 .app-header {
   margin-bottom: var(--space-5);
 }
+.app-header__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: var(--space-2);
+}
+.app-header__top .app-header__eyebrow {
+  margin: 0;
+  padding-top: 0.75rem;
+}
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
 .app-header__eyebrow {
   margin: 0 0 var(--space-2);
   color: var(--color-accent);

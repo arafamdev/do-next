@@ -4,10 +4,12 @@ import TaskFilters from '../features/tasks/components/TaskFilters.jsx';
 import TaskStatistics from '../features/tasks/components/TaskStatistics.jsx';
 import TaskList from '../features/tasks/components/TaskList.jsx';
 import { loadTasks, saveTasks } from '../features/tasks/utils/taskStorage.js';
+import useTheme from '../shared/hooks/useTheme.js';
 import AppHeader from '../shared/ui/AppHeader.jsx';
 import '../styles/app.css';
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const [initialStorage] = useState(loadTasks);
   const [tasks, setTasks] = useState(() => initialStorage.tasks);
   const [storageUnavailable, setStorageUnavailable] = useState(false);
@@ -86,7 +88,7 @@ function App() {
 
   return (
     <main className="app-shell">
-      <AppHeader />
+      <AppHeader theme={theme} onToggleTheme={toggleTheme} />
       <TaskStatistics
         total={totalTasks}
         active={activeTasks}

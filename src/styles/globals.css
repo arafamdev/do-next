@@ -31,6 +31,24 @@
   --radius-panel: 1.25rem;
 }
 
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: #f1f5f2;
+  --color-surface: #fafcfb;
+  --color-border: #7a9085;
+  --color-text: #172e25;
+  --color-muted: #4a6358;
+  --color-accent: #047857;
+  --color-input: #f0f5f2;
+  --color-accent-hover: #065f46;
+  --color-on-accent: #ffffff;
+  --color-danger: #a1263c;
+  --color-danger-soft: #fce8ec;
+  --color-error: #a1263c;
+  --color-accent-soft: #dcefe5;
+  --shadow-panel: 0 24px 64px rgb(23 46 37 / 6%);
+}
+
 * {
   box-sizing: border-box;
 }

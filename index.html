@@ -2,6 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (() => {
+        let preference;
+        try {
+          preference = localStorage.getItem('donext.theme.v1');
+        } catch {
+          preference = null;
+        }
+        let theme = 'dark';
+        if (preference === 'dark' || preference === 'light') {
+          theme = preference;
+          document.documentElement.dataset.themePreference = preference;
+        } else {
+          try {
+            if (window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+          } catch {
+            theme = 'dark';
+          }
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta

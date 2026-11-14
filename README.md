@@ -50,6 +50,7 @@ src/
   features/tasks/components/TaskStatistics.jsx
   features/tasks/utils/taskStorage.js
   shared/ui/AppHeader.jsx
+  shared/hooks/useTheme.js
   styles/app.css
   styles/globals.css
   main.jsx
@@ -91,12 +92,21 @@ Storage belongs to the browser profile and origin (including protocol, hostname 
 
 `TaskStatistics` is a presentation component receiving these four values as props. A definition list pairs each count with its label and a labelled native `progress` element communicates the percentage. Counts update after creation, completion, reopening, deletion and storage recovery. Editing titles, filters and search do not affect the global statistics. Values are not live-announced on every update, avoiding excessive reader announcements.
 
+## Themes
+
+Dark and light themes share semantic CSS tokens and use `data-theme` on the root element, including the native `color-scheme`. A short synchronous script in `index.html` reads `donext.theme.v1` before React renders. Only `dark` and `light` are accepted. Without a valid saved choice, the initial theme follows `prefers-color-scheme`, with dark as the fallback when system information is unavailable. Storage reads and media queries are protected against exceptions.
+
+`useTheme` owns the React selection and initializes from the root attributes applied by that script, avoiding a second storage read and keeping the first render consistent. System changes are followed until a manual choice exists. The header receives the theme and toggle callback; its labelled Sun/Moon button works with mouse and keyboard. Only manual choices write to `donext.theme.v1`. A failed write retains the session choice and never writes to `donext.tasks.v1`. A manual choice overrides subsequent system changes, even when saving fails. Theme preferences do not synchronize between tabs.
+
+The initial script applies the theme before the interface appears to reduce incorrect-theme flashes; later changes are applied in a layout effect before paint. No theme animation or third system option is added.
+
 ## Implemented
 
 - Semantic application layout and heading hierarchy
 - Application header and empty task state
 - Fluid layout with wrapping content
-- Dark palette with emerald accents
+- Dark and light palettes with emerald accents
+- Accessible theme toggle, system preference detection and saved manual choice
 - CSS variables for future theme support
 - Task creation with title validation and accessible feedback
 - Dynamic task list with support for long titles
@@ -112,12 +122,11 @@ Storage belongs to the browser profile and origin (including protocol, hostname 
 - Responsive form layout and reduced-motion support
 - Project linting, formatting and build scripts
 
-Tasks remain available after reload and new sessions while local storage is available. A light theme is not implemented.
+Tasks remain available after reload and new sessions while local storage is available.
 
 ## Roadmap
 
-1. Light theme and saved preference
-2. Accessibility review, interaction polish, tests and deployment
+1. Accessibility review, interaction polish, tests and deployment
 
 ## Maintenance
 
