@@ -1,6 +1,6 @@
 # DoNext
 
-A personal frontend portfolio project: a minimal task manager designed to help you organize today and focus on what comes next.
+A personal frontend project: a minimal task manager designed to help you organize today and focus on what comes next.
 
 ## Project goal
 
