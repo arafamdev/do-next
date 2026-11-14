@@ -348,6 +348,12 @@
   border-radius: 0.75rem;
 }
 
+/* Focus the whole search control, including its icon, as one field. */
+.task-search:has(input:focus-visible) {
+  outline: 2px solid var(--color-input-focus);
+  outline-offset: -1px;
+}
+
 .task-search > svg {
   flex-shrink: 0;
 }
@@ -361,6 +367,11 @@
   color: var(--color-text);
   border: 0;
   border-radius: 0.5rem;
+}
+
+/* Hide the inner outline only when the container indicator can be applied. */
+.task-search:has(input:focus-visible) input {
+  outline: none;
 }
 
 .task-search input::placeholder {

@@ -12,6 +12,7 @@
   --color-bg: #0b1214;
   --color-surface: #121d20;
   --color-border: #586f6a;
+  --color-input-focus: #829b92;
   --color-divider: #293a3b;
   --color-text: #edf5f2;
   --color-muted: #a2b6b2;
@@ -45,6 +46,7 @@
   --color-bg: #f1f5f2;
   --color-surface: #fafcfb;
   --color-border: #7a9085;
+  --color-input-focus: #486d5b;
   --color-divider: #d5dfd9;
   --color-text: #172e25;
   --color-muted: #4a6358;
@@ -87,6 +89,16 @@ a {
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
+}
+
+/* Overlap the field border instead of drawing a separate outer ring. */
+input:focus-visible {
+  outline: 2px solid var(--color-input-focus);
+  outline-offset: -1px;
+}
+
+input[aria-invalid='true']:focus-visible {
+  outline-color: var(--color-error);
 }
 
 ::selection {
