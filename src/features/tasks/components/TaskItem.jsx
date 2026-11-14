@@ -77,6 +77,7 @@ function TaskItem({ task, onToggleTask, onUpdateTask, onDeleteTask }) {
       <button
         className="task-card__toggle"
         type="button"
+        disabled={isConfirmingDelete}
         aria-pressed={task.completed}
         aria-label={`Mark "${task.title}" as ${task.completed ? 'pending' : 'completed'}`}
         onClick={() => onToggleTask(task.id)}

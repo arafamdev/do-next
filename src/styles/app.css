@@ -160,6 +160,7 @@
 }
 .task-card {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: 0.875rem;
   min-width: 0;
@@ -185,10 +186,14 @@
     background-color 150ms ease,
     border-color 150ms ease;
 }
-.task-card__toggle:hover {
+.task-card__toggle:not(:disabled):hover {
   color: var(--color-accent);
   border-color: var(--color-accent);
   background: var(--color-accent-soft);
+}
+.task-card__toggle:disabled {
+  cursor: not-allowed;
+  border-style: dashed;
 }
 .task-card__toggle[aria-pressed='true'] {
   color: var(--color-accent);
@@ -202,6 +207,7 @@
 }
 .task-card__title {
   flex: 1;
+  flex-basis: 5rem;
   align-self: center;
   min-width: 0;
   overflow-wrap: anywhere;
@@ -285,17 +291,11 @@
   }
 }
 
-.task-card {
-  flex-wrap: wrap;
-}
 .task-card__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-left: auto;
-}
-.task-card__title {
-  flex-basis: 5rem;
 }
 .task-card__delete {
   display: inline-grid;
