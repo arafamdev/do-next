@@ -2,6 +2,10 @@
 
 A personal frontend project: a minimal task manager designed to help you organize today and focus on what comes next.
 
+## Live Demo
+
+[Open DoNext](https://do-next-one.vercel.app/)
+
 ## Project goal
 
 Build an accessible, responsive application progressively, using small components and straightforward React data flow.
