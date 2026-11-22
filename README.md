@@ -1,101 +1,99 @@
 # DoNext
 
-A minimal task manager for organizing your day and keeping track of what comes next.
+A responsive task manager built with React, designed to help you organize your day and focus on what comes next. Create tasks, track your progress and switch between dark and light themes.
 
 ## Live Demo
 
-[Open DoNext](https://do-next-one.vercel.app/)
+**[Open DoNext](https://do-next-app.vercel.app/)**
 
-## Preview
+## Application Preview
 
-### Desktop · Dark theme
+### Desktop · Dark Theme
 
 ![DoNext desktop dashboard in dark mode, showing task statistics, progress, search and the task list](docs/imagens/desktop-dark-preview.png)
 
-### Desktop · Light theme
+### Desktop · Light Theme
 
 ![DoNext desktop dashboard in light mode, with task creation, completion controls and inline actions](docs/imagens/desktop-light-preview.png)
 
-### Smaller screens
+### Responsive Design
 
-| Mobile overview                                                                                             | Tablet task panel                                                                                            |
-| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| ![Mobile view of the DoNext header, stacked statistics, progress and bulk actions](docs/imagens/mobile.png) | ![Tablet view of DoNext with statistics, the creation form, filters and task cards](docs/imagens/tablet.png) |
+|                                                    Tablet                                                    |                                                   Mobile                                                    |
+| :----------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------: |
+| ![Tablet view of DoNext with statistics, the creation form, filters and task cards](docs/imagens/tablet.png) | ![Mobile view of the DoNext header, stacked statistics, progress and bulk actions](docs/imagens/mobile.png) |
 
-The mobile and tablet images show portions of the responsive interface.
+The tablet and mobile screenshots show portions of the responsive interface.
 
 ## Features
 
-- Create, edit, complete, reopen and delete tasks, with title validation and inline deletion confirmation.
-- Combine All, Active and Completed filters with case-insensitive title search.
-- Complete or reopen all tasks, including those hidden by filters or search.
-- Track total, active and completed tasks with an overall progress indicator.
-- Switch between dark and light themes, with system preference detection and a saved manual choice.
-- Use keyboard controls, visible focus indicators, labelled inputs and accessible feedback.
-- Browse a responsive layout with internal list scrolling and reduced-motion support.
-- Keep tasks locally between sessions, with storage validation and protection against stale-tab writes.
+- **Task management:** Create, edit, complete, reopen and delete tasks, with title validation and inline deletion confirmation.
+- **Search and filters:** Combine All, Active and Completed filters with case-insensitive title search.
+- **Bulk actions:** Complete or reopen every task, including tasks hidden by filters or search.
+- **Progress:** View total, active and completed tasks alongside overall completion progress.
+- **Themes:** Switch between dark and light modes, with system preference detection and a saved manual choice.
+- **Local persistence:** Keep tasks between sessions, with storage validation and protection against stale-tab writes.
+- **Accessibility:** Semantic landmarks, labelled native controls, visible keyboard focus, Escape to cancel editing or deletion, and accessible feedback.
+- **Responsive design:** Mobile layouts, internal list scrolling on suitable desktops and reduced-motion support.
 
-## Stack
+## Tech Stack
 
-React 19 · Vite 8 · JavaScript / JSX · Vanilla CSS · Lucide React · localStorage · ESLint · Prettier
+- **Frontend:** React 19, JavaScript (JSX), Vite 8
+- **Styling:** Vanilla CSS with shared design tokens and responsive layouts
+- **Icons:** Lucide React
+- **State and storage:** React state and props, localStorage, Web Locks API
+- **Testing and quality:** Node.js Test Runner, ESLint, Prettier
+- **Deployment:** Vercel
 
-## Getting started
+## Getting Started
 
 Use Node.js 22.12+ or a newer supported release, and npm.
 
-```sh
+```bash
 git clone https://github.com/arafamdev/do-next.git
 cd do-next
 npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+Open the local URL printed by Vite. No API key or environment file is required.
 
-## Scripts and checks
+To preview the production build locally:
 
-| Command                                                    | Purpose                                  |
-| ---------------------------------------------------------- | ---------------------------------------- |
-| `npm run dev`                                              | Start the development server             |
-| `npm run build`                                            | Generate the production build in `dist/` |
-| `npm run preview`                                          | Preview the build locally                |
-| `npm run lint`                                             | Check JavaScript and JSX                 |
-| `npm run format:check`                                     | Check formatting                         |
-| `npm run format`                                           | Format project files                     |
-| `node --test src/features/tasks/utils/taskStorage.test.js` | Run focused storage and conflict tests   |
-
-## Architecture and decisions
-
-```text
-src/
-  main.jsx                 # Application entry point
-  app/                     # State and application composition
-  features/tasks/
-    components/            # Forms, filters, statistics and task list
-    utils/                 # Storage coordination and its tests
-  shared/
-    hooks/                 # Theme preference
-    ui/                    # Header and footer
-  styles/                  # Design tokens, layout and component styles
-docs/
-  ARCHITECTURE.md           # Implementation and maintenance guide
-  imagens/                 # Application previews
+```bash
+npm run build
+npm run preview
 ```
 
-`src/app/App.jsx` owns tasks and passes data and callbacks to components in `src/features/tasks/`. Filters, statistics and progress are derived from the task array. Editing drafts and deletion confirmations stay local to each task item.
+## Testing and Validation
 
-Shared UI and theme logic live in `src/shared/`. CSS tokens are defined in `globals.css`, with layout and component styles in `app.css`.
+```bash
+node --test src/features/tasks/utils/taskStorage.test.js
+npm run lint
+npm run format:check
+npm run build
+git diff --check
+```
 
-The application uses React state and props without an external state library. See [Architecture and maintenance](docs/ARCHITECTURE.md) for component responsibilities, focus rules and storage details.
+Storage tests cover successive saves, stale tabs, competing and queued writes, unsafe recovery, unavailable coordination and read/write failures using isolated mocks. They complement manual browser checks of keyboard navigation, layout and real Web Locks behavior.
 
-## Local data and limitations
+Use `npm run format` to format project files with Prettier.
 
-Tasks are stored in the browser's `localStorage`; there is no account or cross-device synchronization. Safe task saving requires Web Locks. If coordination is unavailable, the application remains usable in memory and shows a warning.
+## Architecture
 
-A stale tab cannot overwrite changes saved by another cooperating tab: saving pauses and local edits remain in memory. Invalid or partially recoverable data is also protected from automatic overwrites. Copy unsaved changes before reloading or closing a blocked tab. Browser data can be cleared or unavailable, so local storage is not a backup.
+`src/app/App.jsx` owns task state and passes data and callbacks to components in `src/features/tasks/`. Filters, statistics and progress are derived from the task array; editing drafts and deletion confirmations remain local to each task item.
 
-## Accessibility and responsive layout
+Shared UI and theme logic live in `src/shared/`. Design tokens are defined in `src/styles/globals.css`, with layout and component styles in `src/styles/app.css`. State and props keep the architecture simple without an external state library.
 
-The interface uses semantic header, main and footer landmarks, labelled native controls, visible keyboard focus and live feedback for validation and storage problems. Task completion exposes its state through `aria-pressed`; editing and deletion support Escape and restore focus to a visible control.
+See [Architecture and maintenance](docs/ARCHITECTURE.md) for the project structure, component responsibilities, focus handling and persistence details.
 
-Dark and light themes share the same layout. At suitable desktop widths and heights, the task list scrolls internally while the surrounding dashboard stays visible. Smaller or shorter windows allow document scrolling; controls stack on mobile, long titles wrap, and transitions respect `prefers-reduced-motion`.
+## Limitations
+
+Tasks are stored only in the current browser profile and origin using localStorage. There are no accounts or cross-device synchronization, and clearing browser data can remove tasks.
+
+Safe task saving requires Web Locks. If coordination is unavailable, the app remains usable in memory and displays a warning. Conflicts between cooperating tabs and invalid or partially recovered data pause saving to preserve stored data; local edits remain in memory. Copy unsaved changes before reloading or closing a blocked tab. Local storage is not a backup.
+
+## Author
+
+**Arafam Mussa Silla — Frontend Developer**
+
+[GitHub](https://github.com/arafamdev) · [LinkedIn](https://www.linkedin.com/in/arafam-mussa-silla-5a7866446/) · [Live Demo](https://do-next-app.vercel.app/)
